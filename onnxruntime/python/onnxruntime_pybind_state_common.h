@@ -156,6 +156,10 @@ extern std::string openvino_device_type;
 #include "core/providers/cann/cann_execution_provider_info.h"
 #endif
 
+#ifdef USE_ZHOUYI
+#include "core/providers/zhouyi/zhouyi_provider_factory.h"
+#endif
+
 #if defined(USE_CUDA) || defined(USE_CUDA_PROVIDER_INTERFACE)
 namespace onnxruntime {
 ProviderInfo_CUDA* TryGetProviderInfo_CUDA();

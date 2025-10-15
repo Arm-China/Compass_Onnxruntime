@@ -3,9 +3,9 @@
 // Licensed under the MIT License.
 #pragma once
 #include "core/common/optional.h"
-#include "core/providers/providers.h"
-#include "core/providers/provider_factory_creators.h"
 #include "core/framework/execution_provider.h"
+#include "core/providers/provider_factory_creators.h"
+#include "core/providers/providers.h"
 
 namespace onnxruntime {
 
@@ -66,6 +66,7 @@ std::unique_ptr<IExecutionProvider> DefaultXnnpackExecutionProvider();
 std::unique_ptr<IExecutionProvider> DefaultWebGpuExecutionProvider();
 std::unique_ptr<IExecutionProvider> DefaultCannExecutionProvider();
 std::unique_ptr<IExecutionProvider> DefaultDmlExecutionProvider();
+std::unique_ptr<IExecutionProvider> DefaultZhouyiExecutionProvider();
 
 std::unique_ptr<IExecutionProvider> DefaultInternalTestingExecutionProvider(
     const std::unordered_set<std::string>& supported_ops);

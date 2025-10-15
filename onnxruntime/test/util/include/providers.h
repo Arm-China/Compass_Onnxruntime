@@ -37,3 +37,6 @@
 #ifdef USE_CANN
 #include "core/providers/cann/cann_provider_factory.h"
 #endif
+#ifdef USE_ZHOUYI
+#include "core/providers/zhouyi/zhouyi_provider_factory.h"
+#endif

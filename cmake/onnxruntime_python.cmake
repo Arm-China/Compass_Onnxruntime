@@ -184,11 +184,13 @@ set(onnxruntime_pybind11_state_static_providers
     ${PROVIDERS_XNNPACK}
     ${PROVIDERS_WEBGPU}
     ${PROVIDERS_AZURE}
+    ${PROVIDERS_ZHOUYI}
 )
 
 if(onnxruntime_BUILD_QNN_EP_STATIC_LIB)
   list(APPEND onnxruntime_pybind11_state_static_providers PRIVATE onnxruntime_providers_qnn)
 endif()
+
 
 target_link_libraries(onnxruntime_pybind11_state PRIVATE
     onnxruntime_session
@@ -1075,4 +1077,12 @@ if (onnxruntime_USE_VSINPU)
   )
 endif()
 
+if (onnxruntime_USE_ZHOUYI)
+  add_custom_command(
+    TARGET onnxruntime_pybind11_state POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+        $<TARGET_FILE:onnxruntime_providers_zhouyi>
+        $<TARGET_FILE_DIR:${build_output_target}>/onnxruntime/capi/
+  )
+endif()
 endif()

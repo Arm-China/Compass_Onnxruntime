@@ -23,6 +23,12 @@ void addGlobalSchemaFunctions(pybind11::module& m) {
 
         std::vector<std::shared_ptr<onnxruntime::IExecutionProviderFactory>> factories = {
             onnxruntime::CPUProviderFactoryCreator::Create(0),
+#ifdef USE_ZHOUYI
+            []() {
+              SessionOptions session_options;
+              return onnxruntime::ZhouyiProviderFactoryCreator::Create(&session_options);
+            }(),
+#endif
 #ifdef USE_CUDA
             []() {
               OrtCUDAProviderOptions provider_options{};

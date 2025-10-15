@@ -20,6 +20,14 @@ struct ProviderInfo {
 // kCpuExecutionProvider should always be last
 constexpr ProviderInfo kProvidersInPriorityOrder[] =
     {
+	{
+            kZhouyiExecutionProvider,
+#ifdef USE_ZHOUYI
+            true,
+#else
+            false,
+#endif
+        },
         {
             kNvTensorRTRTXExecutionProvider,
 #ifdef USE_NV

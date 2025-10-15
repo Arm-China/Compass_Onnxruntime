@@ -547,6 +547,10 @@ std::unique_ptr<IExecutionProvider> CreateExecutionProviderInstance(
     return onnxruntime::CPUProviderFactoryCreator::Create(
                session_options.enable_cpu_mem_arena)
         ->CreateProvider();
+  } else if (type == kZhouyiExecutionProvider) {
+#ifdef USE_ZHOUYI
+    return onnxruntime::ZhouyiProviderFactoryCreator::Create(&session_options)->CreateProvider();
+#endif
   } else if (type == kTensorrtExecutionProvider) {
 #if defined(USE_TENSORRT) || defined(USE_TENSORRT_PROVIDER_INTERFACE)
     // If the environment variable 'ORT_TENSORRT_UNAVAILABLE' exists, then we do not load TensorRT. This is set by _ld_preload for the manylinux case

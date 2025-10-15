@@ -113,6 +113,9 @@ endif()
 if (onnxruntime_USE_AZURE)
   set(PROVIDERS_AZURE onnxruntime_providers_azure)
 endif()
+if(onnxruntime_USE_ZHOUYI)
+  set(PROVIDERS_ZHOUYI onnxruntime_providers_zhouyi)
+endif()
 
 
 if(onnxruntime_USE_SNPE)
@@ -206,4 +209,8 @@ endif()
 
 if (onnxruntime_USE_AZURE)
   include(onnxruntime_providers_azure.cmake)
+endif()
+
+if (onnxruntime_USE_ZHOUYI)
+  include(onnxruntime_providers_zhouyi.cmake)
 endif()

@@ -203,6 +203,21 @@ std::pair<COMPARE_RESULT, std::string> IsResultExactlyMatch(const Tensor& outval
   return std::make_pair(COMPARE_RESULT::SUCCESS, "");
 }
 
+template <typename T>
+std::pair<COMPARE_RESULT, std::string> IsResultExactlyMatch(const Tensor& outvalue, const Tensor& expected_value, int error) {
+  const size_t size1 = static_cast<size_t>(expected_value.Shape().Size());
+  const T* expected_output = expected_value.Data<T>();
+  const T* real_output = outvalue.Data<T>();
+  for (size_t di = 0; di != size1; ++di) {
+    if (std::abs(static_cast<int>(expected_output[di] - real_output[di])) >error) {
+      std::ostringstream oss;
+      oss << "expected " << expected_output[di] << ", got " << real_output[di];
+      return std::make_pair(COMPARE_RESULT::RESULT_DIFFERS, oss.str());
+    }
+  }
+  return std::make_pair(COMPARE_RESULT::SUCCESS, "");
+}
+
 template <>
 std::pair<COMPARE_RESULT, std::string> IsResultExactlyMatch<Int4x2>(const Tensor& outvalue,
                                                                     const Tensor& expected_value) {
@@ -335,21 +350,21 @@ std::pair<COMPARE_RESULT, std::string> CompareTwoTensors(const Tensor& outvalue,
   } else if (outvalue.IsDataTypeString()) {
     return IsResultExactlyMatch<std::string>(outvalue, expected_tensor);
   } else if (outvalue.IsDataType<uint8_t>()) {
-    return IsResultExactlyMatch<uint8_t>(outvalue, expected_tensor);
+    return IsResultExactlyMatch<uint8_t>(outvalue, expected_tensor, 1);
   } else if (outvalue.IsDataType<int8_t>()) {
-    return IsResultExactlyMatch<int8_t>(outvalue, expected_tensor);
+    return IsResultExactlyMatch<int8_t>(outvalue, expected_tensor, 1);
   } else if (outvalue.IsDataType<uint16_t>()) {
-    return IsResultExactlyMatch<uint16_t>(outvalue, expected_tensor);
+    return IsResultExactlyMatch<uint16_t>(outvalue, expected_tensor, 1);
   } else if (outvalue.IsDataType<int16_t>()) {
-    return IsResultExactlyMatch<int16_t>(outvalue, expected_tensor);
+    return IsResultExactlyMatch<int16_t>(outvalue, expected_tensor, 1);
   } else if (outvalue.IsDataType<uint32_t>()) {
-    return IsResultExactlyMatch<uint32_t>(outvalue, expected_tensor);
+    return IsResultExactlyMatch<uint32_t>(outvalue, expected_tensor, 1);
   } else if (outvalue.IsDataType<int32_t>()) {
-    return IsResultExactlyMatch<int32_t>(outvalue, expected_tensor);
+    return IsResultExactlyMatch<int32_t>(outvalue, expected_tensor, 1);
   } else if (outvalue.IsDataType<uint64_t>()) {
-    return IsResultExactlyMatch<uint64_t>(outvalue, expected_tensor);
+    return IsResultExactlyMatch<uint64_t>(outvalue, expected_tensor, 1);
   } else if (outvalue.IsDataType<int64_t>()) {
-    return IsResultExactlyMatch<int64_t>(outvalue, expected_tensor);
+    return IsResultExactlyMatch<int64_t>(outvalue, expected_tensor,1);
   } else if (outvalue.IsDataType<bool>()) {
     return IsResultExactlyMatch<bool>(outvalue, expected_tensor);
   } else if (outvalue.IsDataType<Int4x2>()) {

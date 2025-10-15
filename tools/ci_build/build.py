@@ -287,6 +287,8 @@ def generate_vcpkg_install_options(build_dir, args):
         vcpkg_install_options.append("--x-feature=webnn-ep")
     if args.use_xnnpack:
         vcpkg_install_options.append("--x-feature=xnnpack-ep")
+    if args.use_zhouyi:
+        vcpkg_install_options.append("--x-feature=zhouyi-ep")
 
     overlay_triplets_dir = None
 
@@ -431,6 +433,7 @@ def generate_build_tree(
         "-Donnxruntime_USE_NNAPI_BUILTIN=" + ("ON" if args.use_nnapi else "OFF"),
         "-Donnxruntime_USE_VSINPU=" + ("ON" if args.use_vsinpu else "OFF"),
         "-Donnxruntime_USE_RKNPU=" + ("ON" if args.use_rknpu else "OFF"),
+        "-Donnxruntime_USE_ZHOUYI=" + ("ON" if args.use_zhouyi else "OFF"),
         "-Donnxruntime_ENABLE_MICROSOFT_INTERNAL=" + ("ON" if args.enable_msinternal else "OFF"),
         "-Donnxruntime_USE_VITISAI=" + ("ON" if args.use_vitisai else "OFF"),
         "-Donnxruntime_USE_TENSORRT=" + ("ON" if args.use_tensorrt else "OFF"),
@@ -1814,6 +1817,7 @@ def build_python_wheel(
     use_cann,
     use_azure,
     use_qnn,
+    use_zhouyi,
     wheel_name_suffix,
     enable_training,
     nightly_build=False,
@@ -1876,6 +1880,8 @@ def build_python_wheel(
             args.append("--use_qnn")
         elif use_azure:
             args.append("--use_azure")
+        elif use_zhouyi:
+            args.append("--use_zhouyi")
 
         run_subprocess(args, cwd=cwd)
 
@@ -1893,6 +1899,7 @@ def build_nuget_package(
     use_winml,
     use_qnn,
     use_dml,
+    use_zhouyi,
     enable_training_apis,
     msbuild_extra_options,
 ):
@@ -1944,6 +1951,9 @@ def build_nuget_package(
             raise BuildError("Currently NuGet packages with QNN require QNN EP to be built as a shared library.")
         execution_provider = "/p:ExecutionProvider=qnn"
         package_name = "/p:OrtPackageId=Microsoft.ML.OnnxRuntime.QNN"
+    elif use_zhouyi:
+        execution_provider = "/p:ExecutionProvider=zhouyi"
+        package_name = "/p:OrtPackageId=Microsoft.ML.OnnxRuntime.Zhouyi"
     elif any("OrtPackageId=" in x for x in msbuild_extra_options):
         pass
     else:
@@ -2494,6 +2504,7 @@ def main():
                 args.use_cann,
                 args.use_azure,
                 args.use_qnn,
+                args.use_zhouyi,
                 args.wheel_name_suffix,
                 args.enable_training,
                 nightly_build=nightly_build,
@@ -2517,6 +2528,7 @@ def main():
                 getattr(args, "use_winml", False),
                 args.use_qnn,
                 getattr(args, "use_dml", False),
+                args.use_zhouyi,
                 args.enable_training_apis,
                 normalize_arg_list(args.msbuild_extra_options),
             )

@@ -483,6 +483,13 @@ if (onnxruntime_USE_RKNPU)
   list(APPEND onnxruntime_test_providers_src ${onnxruntime_test_providers_rknpu_src})
 endif()
 
+if (onnxruntime_USE_ZHOUYI)
+  file(GLOB_RECURSE onnxruntime_test_providers_zhouyi_src CONFIGURE_DEPENDS
+    "${TEST_SRC_DIR}/providers/zhouyi/*"
+    )
+  list(APPEND onnxruntime_test_providers_src ${onnxruntime_test_providers_zhouyi_src})
+endif()
+
 if (NOT onnxruntime_MINIMAL_BUILD OR onnxruntime_EXTENDED_MINIMAL_BUILD)
   file(GLOB_RECURSE onnxruntime_test_providers_internal_testing_src CONFIGURE_DEPENDS
     "${TEST_SRC_DIR}/providers/internal_testing/*"
@@ -599,6 +606,10 @@ if(onnxruntime_USE_RKNPU)
   list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_rknpu)
 endif()
 
+if(onnxruntime_USE_ZHOUYI)
+  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_zhouyi)
+endif()
+
 if(onnxruntime_USE_DML)
   list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_dml)
 endif()
@@ -643,6 +654,7 @@ set(ONNXRUNTIME_TEST_STATIC_PROVIDER_LIBS
     ${PROVIDERS_COREML}
     ${PROVIDERS_XNNPACK}
     ${PROVIDERS_AZURE}
+    ${PROVIDERS_ZHOUYI}
 )
 
 if (onnxruntime_BUILD_QNN_EP_STATIC_LIB)
@@ -767,6 +779,13 @@ if(onnxruntime_USE_AZURE)
   list(APPEND onnxruntime_test_framework_libs onnxruntime_providers_azure)
   list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_azure)
   list(APPEND onnxruntime_test_providers_libs onnxruntime_providers_azure)
+endif()
+
+if(onnxruntime_USE_ZHOUYI)
+  list(APPEND onnxruntime_test_framework_src_patterns  ${TEST_SRC_DIR}/providers/zhouyi/*)
+  list(APPEND onnxruntime_test_framework_libs onnxruntime_providers_zhouyi)
+  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_zhouyi)
+  list(APPEND onnxruntime_test_providers_libs onnxruntime_providers_zhouyi)
 endif()
 
 file(GLOB onnxruntime_test_framework_src CONFIGURE_DEPENDS

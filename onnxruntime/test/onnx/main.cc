@@ -49,7 +49,7 @@ void usage() {
       "\t-v: verbose\n"
       "\t-n [test_case_name]: Specifies a single test case to run.\n"
       "\t-e [EXECUTION_PROVIDER]: EXECUTION_PROVIDER could be 'cpu', 'cuda', 'dnnl', 'tensorrt', 'vsinpu'"
-      "'openvino', 'rocm', 'migraphx', 'acl', 'armnn', 'xnnpack', 'webgpu', 'nnapi', 'qnn', 'snpe' or 'coreml'. "
+      "'openvino', 'rocm', 'migraphx', 'acl', 'armnn', 'xnnpack', 'webgpu', 'nnapi', 'qnn', 'snpe', 'zhouyi' or 'coreml'. "
       "Default: 'cpu'.\n"
       "\t-p: Pause after launch, can attach debugger and continue\n"
       "\t-x: Use parallel executor, default (without -x): sequential executor.\n"
@@ -223,6 +223,7 @@ int real_main(int argc, char* argv[], Ort::Env& env) {
   bool enable_migraphx = false;
   bool enable_webgpu = false;
   bool enable_xnnpack = false;
+  bool enable_zhouyi = false;
   bool override_tolerance = false;
   double atol = 1e-5;
   double rtol = 1e-5;
@@ -318,6 +319,8 @@ int real_main(int argc, char* argv[], Ort::Env& env) {
             enable_webgpu = true;
           } else if (!CompareCString(optarg, ORT_TSTR("xnnpack"))) {
             enable_xnnpack = true;
+          } else if (!CompareCString(optarg, ORT_TSTR("zhouyi"))) {
+            enable_zhouyi = true;
           } else {
             usage();
             return -1;
@@ -766,6 +769,14 @@ select from 'TF8', 'TF16', 'UINT8', 'FLOAT', 'ITENSOR'. \n)");
       sf.AppendExecutionProvider("WebGPU", {});
 #else
       fprintf(stderr, "WebGPU is not supported in this build");
+      return -1;
+#endif
+    }
+    if (enable_zhouyi) {
+#ifdef USE_ZHOUYI
+      Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Zhouyi(sf));
+#else
+      fprintf(stderr, "Zhouyi is not supported in this build\n");
       return -1;
 #endif
     }

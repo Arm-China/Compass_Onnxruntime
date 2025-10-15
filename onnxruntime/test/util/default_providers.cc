@@ -2,18 +2,20 @@
 // SPDX-FileCopyrightText: Copyright 2024 Arm Limited and/or its affiliates <open-source-office@arm.com>
 // Licensed under the MIT License.
 
-#include <memory>
 #include "default_providers.h"
-#include "providers.h"
+
+#include <memory>
+
 #include "core/providers/cpu/cpu_provider_factory_creator.h"
+#include "providers.h"
 #ifdef USE_COREML
 #include "core/providers/coreml/coreml_provider_factory.h"
 #endif
 #ifdef USE_CUDA
 #include <core/providers/cuda/cuda_provider_options.h>
 #endif
-#include "core/session/onnxruntime_cxx_api.h"
 #include "core/framework/session_options.h"
+#include "core/session/onnxruntime_cxx_api.h"
 
 namespace onnxruntime {
 
@@ -332,6 +334,14 @@ std::unique_ptr<IExecutionProvider> DefaultDmlExecutionProvider() {
   if (auto factory = DMLProviderFactoryCreator::CreateFromDeviceOptions(config_options, nullptr, false, false)) {
     return factory->CreateProvider();
   }
+#endif
+  return nullptr;
+}
+
+std::unique_ptr<IExecutionProvider> DefaultZhouyiExecutionProvider() {
+#ifdef USE_ZHOUYI
+  SessionOptions session_options;
+  return ZhouyiProviderFactoryCreator::Create(&session_options)->CreateProvider();
 #endif
   return nullptr;
 }
