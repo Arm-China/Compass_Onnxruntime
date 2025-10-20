@@ -51,7 +51,7 @@ Usage : export DUMP_FILE=on
 
 #### TOOLKIT_LOG_LEVEL
 
-This corresponds to the log level in the the aipu-toolkit.
+This corresponds to the log level in the the zhouyinpu-toolkit.
 
 * 0(defalut): LOG_ERROR
 * 1: LOG_WARN

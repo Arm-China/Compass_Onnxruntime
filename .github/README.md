@@ -26,11 +26,11 @@
 
 ## Build
 
-### prepare aipu-toolkit
+### prepare zhouyinpu-toolkit
 
-The aipu-toolkit is a high-level interface for accessing Zhouyi NPU,
+The zhouyinpu-toolkit is a high-level interface for accessing Zhouyi NPU,
 which is included in the "Zhouyi" NPU Compass SDK MiniPkg.
-Zhouyi Execution Provider implements deep learning inference on Zhouyi NPU via aipu-toolkit.
+Zhouyi Execution Provider implements deep learning inference on Zhouyi NPU via zhouyinpu-toolkit.
 
 | onnxruntime version | MiniPkg version |
 | ------------------- | --------------- |
@@ -79,7 +79,7 @@ build onnxruntime library
 ```shell
 $ ./build.sh --use_zhouyi --parallel --build_shared_lib --build_dir build_x86 \
 --config Debug --skip_tests --skip_submodule_sync --cmake_extra_defines \
-AIPU_TOOLKIT_DIR=/path/to/aipu-toolkit/{zhouyi_arch} \
+AIPU_TOOLKIT_DIR=/path/to/zhouyinpu-toolkit/{zhouyi_arch} \
 ZHOUYI_RUNTIME_LIB_ARCH=x86_64 \
 ZHOUYI_RUNTIME_SIMULATOR=ON \
 CMAKE_TOOLCHAIN_FILE=/path/to/tool_x86.cmake
@@ -90,7 +90,7 @@ build onnxruntime python package
 ```shell
 $ ./build.sh --use_zhouyi --parallel --build_shared_lib --build_dir build_x86 \
 --config Debug --skip_tests --build_wheel --cmake_extra_defines \
-AIPU_TOOLKIT_DIR=/path/to/aipu-toolkit/{zhouyi_arch} \
+AIPU_TOOLKIT_DIR=/path/to/zhouyinpu-toolkit/{zhouyi_arch} \
 ZHOUYI_RUNTIME_LIB_ARCH=x86_64 \
 ZHOUYI_RUNTIME_SIMULATOR=ON \
 CMAKE_TOOLCHAIN_FILE=/path/to/tool_x86.cmake
@@ -103,7 +103,7 @@ build onnxruntime library
 ```shell
 $ ./build.sh --use_zhouyi --parallel --build_shared_lib --build_dir build_arm64 \
 --config Debug --skip_tests --skip_submodule_sync --cmake_extra_defines \
-AIPU_TOOLKIT_DIR=/path/to/aipu-toolkit/{zhouyi_arch} \
+AIPU_TOOLKIT_DIR=/path/to/zhouyinpu-toolkit/{zhouyi_arch} \
 ZHOUYI_RUNTIME_LIB_ARCH=arm64-v8a \
 CMAKE_TOOLCHAIN_FILE=/path/to/tool_arm64.cmake
 ```
@@ -115,7 +115,7 @@ build onnxruntime python package
 ```shell
 $ ./build.sh --use_zhouyi --parallel --build_shared_lib --build_dir build_arm64 \
 --config Debug --skip_tests --skip_submodule_sync --build_wheel --cmake_extra_defines \
-AIPU_TOOLKIT_DIR=/path/to/aipu-toolkit/{zhouyi_arch} \
+AIPU_TOOLKIT_DIR=/path/to/zhouyinpu-toolkit/{zhouyi_arch} \
 ZHOUYI_RUNTIME_LIB_ARCH=arm64-v8a \
 CMAKE_TOOLCHAIN_FILE=/path/to/tool_arm64.cmake
 ```
@@ -145,7 +145,7 @@ $ python3 ../../setup.py bdist_wheel --use_zhouyi
 Prerequisites:
 
 ```shell
-$ export OPERATOR_PATH=/path/to/aipu-toolkit/{zhouyi_arch}/operator/
+$ export OPERATOR_PATH=/path/to/zhouyinpu-toolkit/{zhouyi_arch}/operator/
 ```
 
 **X86_64**:
@@ -171,7 +171,7 @@ Currently, users can use C++ and Python API on Zhouyi EP.
 Prerequisites:
 
 ```shell
-$ export OPERATOR_PATH=/path/to/aipu-toolkit/{zhouyi_arch}/operator/
+$ export OPERATOR_PATH=/path/to/zhouyinpu-toolkit/{zhouyi_arch}/operator/
 ```
 
 code path:
@@ -199,7 +199,7 @@ from ZhouyiOperators import operators
 2. Use env
 
 ```shell
-$ export OPERATOR_PATH=/path/to/aipu-toolkit/{zhouyi_arch}/operator/
+$ export OPERATOR_PATH=/path/to/zhouyinpu-toolkit/{zhouyi_arch}/operator/
 ```
 
 code path:
