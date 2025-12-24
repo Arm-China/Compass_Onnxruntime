@@ -4,18 +4,14 @@ build_help() {
     echo "====================build operator wheel package============================"
     echo "Build Options:"
     echo "-h, --help                    help"
-    echo "-a, --arch                    Zhouyi arch (default x3p):"
-    echo "                              - x3p"
-    echo "                              - x2"
     echo "-k, --toolkit                 The aipu toolkit path"
-    echo "  ./build_operators_whl.sh -a x3p -k /project/ai/scratch01/Compass_Runtime_Midware/share/x3p"
-    echo "  ./build_operators_whl.sh -a x2 -k /project/ai/scratch01/Compass_Runtime_Midware/share/x2"
+    echo "./build_operators_whl.sh -k /project/ai/scratch01/Compass_Runtime_Midware/share"
     echo "==========================================================================="
     exit 1
 }
 
-ZHOUYI_ARCH=x3p
-AIPU_TOOLKIL_HOME=/project/ai/scratch01/Compass_Runtime_Midware/share/x3p
+ZHOUYI_ARCH=all
+AIPU_TOOLKIL_HOME=/project/ai/scratch01/Compass_Runtime_Midware/share
 
 while [ -n "$1" ]
 do

@@ -67,11 +67,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-variable -Wno-unused-paramet
       aipu_buildtool
       aipu_driver
   )
-  if (ZHOUYI_RUNTIME_SIMULATOR)
-      configure_file(${ZHOUYI_RUNTIME_LIB_DIR}/libaipu_simulator.so
-      ${CMAKE_CURRENT_BINARY_DIR}/libaipu_simulator.so COPYONLY)
-      set(ZHOUYI_RUNTIME_LIBS  ${ZHOUYI_RUNTIME_LIBS} aipu_simulator)
-  endif()
 
   target_link_libraries(onnxruntime_providers_zhouyi PRIVATE ${ZHOUYI_RUNTIME_LIBS})
   add_dependencies(onnxruntime_providers_zhouyi onnx ${onnxruntime_EXTERNAL_DEPENDENCIES})

@@ -3,9 +3,6 @@
 #### OPERATOR_PATH
 
 The path of the operator library.
-X2 includes aiffcllib_x2.a and tpccllib_x2.a.
-X3 includes aiffcllib_x3.a ,tpccllib_x3.a , dsl_op_lib.a and aipubt_internal_lib.a.
-X3P includes aiffcllib_x3p.a ,tpccllib_x3p.a , dsl_op_lib.a and aipubt_internal_lib.a.
 The default value is './operator'.
 Usage : export OPERATOR_PATH=/path/to/Compass_Runtime_onnxruntime/operator
 
@@ -67,5 +64,21 @@ This corresponds to the opening of the aipu runtime tiling function.
 
 * fps: pay close attention to fps.
 * The default value is 'fps'.
-  Usage : export TILING_METHOD=fps
 * none: disable tiling.
+
+Usage : export TILING_METHOD=fps
+
+#### SIMULATOR_ARCH
+
+This corresponds to the switching of the aipuruntime simulator arch.
+Support:
+
+* X2_1204MP3
+* X3P_1304
+* X3P_1304MP2
+* X3P_1304MP4
+* X3S_1304
+* X3S_1304MP2
+* X3S_1304MP4
+
+Usage : export SIMULATOR_ARCH=X2_1204MP3

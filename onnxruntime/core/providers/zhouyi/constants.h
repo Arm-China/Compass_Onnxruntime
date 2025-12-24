@@ -7,7 +7,7 @@ namespace zhouyi {
 namespace constants {
 constexpr const char* TOOLKIT_LOG_LEVEL = "TOOLKIT_LOG_LEVEL";
 constexpr const char* DUMP_FILE = "DUMP_FILE";
-constexpr const char* SIMULATOR_TARGET = "SIMULATOR_TARGET";
+constexpr const char* SIMULATOR_ARCH = "SIMULATOR_ARCH";
 constexpr const char* INTERMIDIATE_PATH = "INTERMIDIATE_PATH";
 constexpr const char* OPERATOR_PATH = "OPERATOR_PATH";
 constexpr const char* SIMULATOR_PATH = "SIMULATOR_PATH";
@@ -20,6 +20,7 @@ constexpr const char* EP_CACHE_CONTEXT = "ep_cache_context";
 constexpr const char* HARDWARE_ARCHITECTURE = "hardware_architecture";
 constexpr const char* PARTITION_NAME = "partition_name";
 constexpr const char* SOURCE = "source";
+constexpr const char* DEFAULT_ARCH = "X3P_1304MP2";
 }  // namespace constants
 }  // namespace zhouyi
 }  // namespace onnxruntime

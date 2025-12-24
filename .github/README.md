@@ -34,7 +34,7 @@ Zhouyi Execution Provider implements deep learning inference on Zhouyi NPU via z
 
 | onnxruntime version | MiniPkg version |
 | ------------------- | --------------- |
-| rel-1.22.0          | 4.1.0           |
+| rel-1.22.0          | 4.2.0           |
 
 ### Modify tool_x86.cmake/tool_arm64.cmake to ensure that the gcc path is available.
 

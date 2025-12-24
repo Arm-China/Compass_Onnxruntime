@@ -53,6 +53,8 @@ void AipuInterfaceInit() {
     return;
   aipuruntime::GlobalConfig config = {
       .log_level = static_cast<uint32_t>(zhouyi::utils::GetEnv(zhouyi::constants::TOOLKIT_LOG_LEVEL, 0)),
+      .simulator_arch = zhouyi::utils::GetEnv(zhouyi::constants::SIMULATOR_ARCH,
+                                              zhouyi::constants::DEFAULT_ARCH),
       .intermidiate_path = zhouyi::utils::GetEnv(zhouyi::constants::INTERMIDIATE_PATH, "./"),
       .operator_path = zhouyi::utils::GetEnv(zhouyi::constants::OPERATOR_PATH, "./operator"),
       .simulator_path = zhouyi::utils::GetEnv(zhouyi::constants::SIMULATOR_PATH, "simulator/"),
