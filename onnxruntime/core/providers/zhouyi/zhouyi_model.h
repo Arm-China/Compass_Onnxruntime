@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-
 #pragma once
 
 #include "aipuruntime_cxx_api.h"
@@ -151,6 +150,7 @@ class ZhouyiModel {
   TensorPtrList OpTile(const NodeUnit* node_unit);
   TensorPtrList OpExpand(const NodeUnit* node_unit);
   TensorPtrList OpCumSum(const NodeUnit* node_unit);
+  TensorPtrList OpErf(const NodeUnit* node_unit);
 
   aipubt::TensorPtr NchwOpCreate(const NodeUnit* node_unit, NCHWOpFunc op_func);
 

@@ -399,6 +399,7 @@ providers_zhouyi = [
     "libaiputoolchain.so",
     "libaipu_toolchain_core.so",
     "libaipu_runtime.so",
+    "libaipu_opt_builtin.so",
 ]
 # Additional binaries
 dl_libs = []

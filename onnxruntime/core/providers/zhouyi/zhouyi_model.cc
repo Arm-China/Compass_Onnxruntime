@@ -207,7 +207,7 @@ Status ZhouyiModel::AddNode(const NodeUnit* node_unit) {
   } else if (optype == "Abs") {
     aipu_outputs = OpUnary(node_unit, aipubt::ops::abs);
   } else if (optype == "Erf") {
-    aipu_outputs = OpUnary(node_unit, aipubt::ops::erf);
+    aipu_outputs = OpErf(node_unit);
   } else if (optype == "Concat") {
     aipu_outputs = OpConcat(node_unit);
   } else if (optype == "QLinearConcat") {
@@ -518,13 +518,29 @@ TensorPtrList ZhouyiModel::OpPad(const NodeUnit* node_unit) {
   for (uint32_t i = 0; i < pads_value.size() / 2; ++i) {
     pads.push_back(std::make_pair(pads_value[i], pads_value[pads_value.size() / 2 + i]));
   }
-
-  int32_t constant_value = 0;
+  aipubt::TensorPtr output = nullptr;
   // Process optional input constant_value
   if (node_unit->Inputs().size() > 2) {
-    constant_value = GetInitValue<int32_t>(node_unit->Inputs()[2].node_arg);
+    int32_t value_type = node_unit->Inputs()[2].node_arg.TypeAsProto()->tensor_type().elem_type();
+    if (value_type == ONNX_NAMESPACE::TensorProto_DataType_FLOAT16) {
+      const auto value_tensor = GetInitTensorProto(node_unit->Inputs()[2].node_arg.Name());
+      Initializer unpacked_tensor(*value_tensor);
+      float value_fp16 = unpacked_tensor.DataAsSpan<MLFloat16>()[0].ToFloat();
+      output = aipubt::ops::pad(input0, pads, pad_mode, value_fp16);
+    } else if (value_type == ONNX_NAMESPACE::TensorProto_DataType_FLOAT) {
+      float constant_value = GetInitValue<float>(node_unit->Inputs()[2].node_arg);
+      output = aipubt::ops::pad(input0, pads, pad_mode, constant_value);
+    } else if (value_type == ONNX_NAMESPACE::TensorProto_DataType_INT32) {
+      int32_t constant_value = GetInitValue<int32_t>(node_unit->Inputs()[2].node_arg);
+      output = aipubt::ops::pad(input0, pads, pad_mode, constant_value);
+    } else {
+      int32_t constant_value = GetInitValue<int32_t>(node_unit->Inputs()[2].node_arg);
+      output = aipubt::ops::pad(input0, pads, pad_mode, constant_value);
+    }
+  } else {
+    output = aipubt::ops::pad(input0, pads, pad_mode);
   }
-  auto output = aipubt::ops::pad(input0, pads, pad_mode, constant_value);
+
   return {output};
 }
 
@@ -1344,6 +1360,7 @@ TensorPtrList ZhouyiModel::OpLRN(const NodeUnit* node_unit) {
     auto bias = node_helper.Get("bias", 1.0f);
     auto size = node_helper.Get("size", 1);
     auto quant = ParseQuantization(node_unit_->Outputs()[0], input0->quantization());
+    quant.set_lut_items_bits(12);
     auto output = aipubt::ops::lrn(
         input0, size, aipubt::ops::LrnMethod::AcrossChannels, alpha, beta, bias, quant);
     return output;
@@ -1606,6 +1623,32 @@ TensorPtrList ZhouyiModel::OpCumSum(const NodeUnit* node_unit) {
   int32_t axis = GetInitValue<int32_t>(node_unit->Inputs()[1].node_arg);
   auto output = aipubt::ops::cumulate(
       input0, aipubt::ops::CumulateMethod::SUM, axis, exclusive, reverse);
+  return {output};
+}
+
+TensorPtrList ZhouyiModel::OpErf(const NodeUnit* node_unit) {
+  auto input0 = AipuTensorMatch(node_unit->Inputs()[0]);
+  auto quant = ParseQuantization(node_unit->Outputs()[0], input0->quantization());
+  aipubt::TensorPtr output = nullptr;
+  float float_input_max = 3.0;
+  if (input0->type() == aipubt::Tensor::UINT16) {
+    int i8_max = 256;
+    if (i8_max * input0->quantization().scale() > float_input_max) {
+      output = aipubt::ops::cast(input0, aipubt::Tensor::INT8, false, aipubt::ops::ClipMode::Saturation, quant);
+      output = aipubt::ops::erf(output, quant);
+      output = aipubt::ops::cast(output, input0->type(), false, aipubt::ops::ClipMode::Saturation, quant);
+    }
+  } else if (input0->type() == aipubt::Tensor::INT16) {
+    int i8_max = 128;
+    if (i8_max * input0->quantization().scale() > float_input_max) {
+      output = aipubt::ops::cast(input0, aipubt::Tensor::INT8, false, aipubt::ops::ClipMode::Saturation, quant);
+      output = aipubt::ops::erf(output, quant);
+      output = aipubt::ops::cast(output, input0->type(), false, aipubt::ops::ClipMode::Saturation, quant);
+    }
+  }
+  if (output == nullptr) {
+    output = aipubt::ops::erf(input0, quant);
+  }
   return {output};
 }
 
@@ -2293,6 +2336,9 @@ std::unordered_set<const Node*> ZhouyiModel::GetSupportedNodes() const {
 aipubt::TensorPtr ZhouyiModel::NchwOpCreate(const NodeUnit* node_unit, NCHWOpFunc op_func) {
   // 1. to NHWC
   auto input0 = AipuTensorMatch(node_unit->Inputs()[0]);
+  if (input0->shape().dim() != 4) {
+    return op_func(input0, node_unit);
+  }
   std::vector<uint32_t> perm = {0, 2, 3, 1};
   auto transpose_output = aipubt::ops::transpose(input0, perm);
 

@@ -58,6 +58,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-variable -Wno-unused-paramet
   configure_file(${ZHOUYI_RUNTIME_LIB_DIR}/libaipu_driver.so
    ${CMAKE_CURRENT_BINARY_DIR}/libaipu_driver.so COPYONLY)
 
+  configure_file(${ZHOUYI_RUNTIME_LIB_DIR}/libaipu_opt_builtin.so
+   ${CMAKE_CURRENT_BINARY_DIR}/libaipu_opt_builtin.so COPYONLY)
+
   set(ZHOUYI_RUNTIME_LIBS
       aipu_runtime
       aipu_layerlib
@@ -66,6 +69,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-variable -Wno-unused-paramet
       aiputoolchain
       aipu_buildtool
       aipu_driver
+      aipu_opt_builtin
   )
 
   target_link_libraries(onnxruntime_providers_zhouyi PRIVATE ${ZHOUYI_RUNTIME_LIBS})

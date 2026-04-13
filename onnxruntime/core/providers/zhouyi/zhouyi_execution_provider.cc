@@ -242,7 +242,8 @@ Status CreateComputeFunc(std::vector<NodeComputeInfo>& node_compute_funcs,
     for (size_t i = 0; i < input_count; ++i) {
       auto ort_tensor = ctx.GetInput(i);
       inputs.push_back({const_cast<void*>(ort_tensor.GetTensorData<void>()),
-                        TensorDataSize(ort_tensor)});
+                        TensorDataSize(ort_tensor),
+                        {}});
     }
 
     const size_t output_count = ctx.GetOutputCount();
@@ -252,7 +253,8 @@ Status CreateComputeFunc(std::vector<NodeComputeInfo>& node_compute_funcs,
       std::vector<int64_t> vec(dims.begin(), dims.end());
       auto ort_tensor = ctx.GetOutput(i, vec);
       outputs.push_back({const_cast<void*>(ort_tensor.GetTensorData<void>()),
-                         TensorDataSize(ort_tensor)});
+                         TensorDataSize(ort_tensor),
+                         {}});
     }
     int32_t result = session->execute(inputs, outputs);
     return (result == 0) ? Status::OK() : Status_FAIL("Execute failed.");
@@ -282,6 +284,7 @@ common::Status ZhouyiExecutionProvider::Compile(const std::vector<FusedNodeAndGr
         .tiling_method = zhouyi::utils::GetEnv(zhouyi::constants::TILING_METHOD, "fps"),
         .dump_file = zhouyi::utils::GetEnv(zhouyi::constants::DUMP_FILE, false),
     };
+    config.disable_plugin = "HwaLRN";
     // seesion for compile and execute
     aipuruntime::SessionPtr session = std::make_shared<aipuruntime::Session>(config);
     std::string ctx_cache_path;
